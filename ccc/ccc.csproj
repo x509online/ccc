@@ -1,0 +1,66 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>    
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <!-- https://github.com/dotnet/sdk/issues/1846#issuecomment-356726385 -->
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);PackPublishOutput</TargetsForTfmSpecificContentInPackage>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+
+    <PackAsTool Condition="'$(TargetFramework)'=='netcoreapp2.1'">true</PackAsTool>
+    <PackageType>DotNetCliTool</PackageType>
+    
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  
+  <PropertyGroup>  
+    <Version>0.0.2</Version>
+    <Authors>rido</Authors>
+    <Product>CertCentralClient</Product>
+    <Description>Command Line Utility for certcentral.x509.online</Description>
+    <PackageId>dotnet-ccc</PackageId>
+    <RepositoryUrl>https://github.com/x509online/ccc</RepositoryUrl>
+    <PackageIconUrl>https://avatars1.githubusercontent.com/u/47493741</PackageIconUrl>
+    <PackageTags>x509, certificates, self-signed</PackageTags>
+    <Copyright>copyleft</Copyright>
+    <PackageProjectUrl>https://certcentral.x509.online</PackageProjectUrl>
+  </PropertyGroup>
+
+ <ItemGroup Condition="'$(TargetFramework)' == ''">    
+    <None Include="tools\**" Pack="true" PackagePath="tools" />
+    <None Include="toolsCrossTargeting\**" Pack="true" PackagePath="buildCrossTargeting" />
+  </ItemGroup>
+    
+  <ItemGroup>
+    <PackageReference Include="JustCli" Version="2.2.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="4.5.0" />
+    <PackageReference Include="System.Security.Cryptography.X509Certificates" Version="4.3.2" />
+    <PackageReference Include="System.Security.Principal.Windows" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CertPicker\CertPicker.csproj" Condition="'$(TargetFramework)' == 'net47'" PrivateAssets="All" />
+  </ItemGroup>
+
+  <Target Name="PreparePublishToIntermediatePaths">
+    <PropertyGroup>
+      <PublishDir>$(IntermediateOutputPath)TmpPackPublish\</PublishDir>
+    </PropertyGroup>
+    <ItemGroup>
+      <_OldIntermediatePublishFiles Include="$(PublishDir)**\*.*" />
+    </ItemGroup>
+    <Delete Files="@(_OldIntermediatePublishFiles)" ContinueOnError="true" />
+    <RemoveDir Directories="$(PublishDir)" ContinueOnError="true" Condition="Exists('$(PublishDir)')" />
+    <MakeDir Directories="$(PublishDir)" Condition="!Exists('$(PublishDir)')" />
+  </Target>
+
+  <Target Name="PackPublishOutput" DependsOnTargets="PreparePublishToIntermediatePaths;Publish">
+    <ItemGroup>
+      <_IntermediatePublishFiles Include="$(PublishDir)**\*.*" />
+      <TfmSpecificPackageFile Include="@(_IntermediatePublishFiles)" PackagePath="tools\$(TargetFramework)" />
+    </ItemGroup>
+  </Target>
+
+
+</Project>

@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "ccc": {
+      "commandName": "Project",
+      "commandLineArgs": "searchcerts -t 7A50BC4CB9553728528129C85CF3BD909C49976B",
+      "workingDirectory": "C:\\code\\certcentral\\client\\ccc\\bin\\Debug\\netcoreapp2.1"
+    }
+  }
+}

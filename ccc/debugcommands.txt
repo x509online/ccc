@@ -1,0 +1,7 @@
+﻿samplecert -tp c29b1b140f62c30359f8996c64ca7be53f6b3bd9
+samplecert -tp 4aa0e6cc396d3c145cffd498aee0d85764a8a9e9
+registercert -c RidoTheDev.pfx -p ***
+registercert -cs rido
+viewcerts -u ridomin
+login -u ridomin -k ca9e1655-c3e0-e306-e492-c3f9d79aa925
+searchcerts -t 7A50BC4CB9553728528129C85CF3BD909C49976B
