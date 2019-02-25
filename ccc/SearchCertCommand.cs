@@ -31,7 +31,7 @@ namespace ccc
             {
                 Output.WriteInfo($"The certificate with thumbprint {Thumbprint.ToUpperInvariant()} is registered with user https://github.com/{userName}");
                 Output.WriteInfo($"\n Query the certificates of user '{userName}' by running:");
-                Output.WriteInfo($"ccc viewcerts -u {userName}\n");
+                Output.WriteInfo($"ccc certs -u {userName}\n");
             }
             else
             {
