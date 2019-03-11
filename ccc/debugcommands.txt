@@ -5,3 +5,4 @@ registercert -cs rido
 viewcerts -u ridomin
 login -u ridomin -k ca9e1655-c3e0-e306-e492-c3f9d79aa925
 searchcerts -t 7A50BC4CB9553728528129C85CF3BD909C49976B
+trust -u ridomin -t 728511CC02E6A80B45ABC0CC862FEF1BFD9617D7
