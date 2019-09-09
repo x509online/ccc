@@ -7,7 +7,7 @@
     <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);PackPublishOutput</TargetsForTfmSpecificContentInPackage>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 
-    <PackAsTool Condition="'$(TargetFramework)'=='netcoreapp2.1'">true</PackAsTool>
+    <PackAsTool Condition="'$(TargetFramework)'=='netcoreapp2.2'">true</PackAsTool>
     <PackageType>DotNetCliTool</PackageType>
     
     <LangVersion>latest</LangVersion>
