@@ -36,17 +36,18 @@ namespace ccc
         {
             bool allTrusted = true;
             List<X509Certificate2> parsedCerts = new List<X509Certificate2>();
-            HttpClient http = new HttpClient();
-            var jsonCerts = await http.GetStringAsync(
-                $"{Program.Config.BaseUrl}cert/GetCertsFromUser/{Name}");
-
+            string jsonCerts = string.Empty;
+            using (HttpClient http = new HttpClient())
+            {
+                jsonCerts = await http.GetStringAsync(new Uri($"{Program.Config.BaseUrl}cert/GetCertsFromUser/{Name}")).ConfigureAwait(true);
+            }    
             var certs = JsonConvert.DeserializeObject<IList<CertInfo>>(jsonCerts);
             Output.WriteSuccess($"Found {certs.Count} certs for user {Name}");
             Output.WriteInfo("\n");
             for (int i = 0; i < certs.Count; i++)
             {
                 var c = certs[i];
-                var cert = await CertRestClient.DownloadCertAndCache(Name, c.ThumbPrint);
+                var cert = await CertRestClient.DownloadCertAndCache(Name, c.ThumbPrint).ConfigureAwait(true);
                 parsedCerts.Add(cert);
                 (bool trusted, IList<string> reasons) = CertTrustValidator.IsTrusted(cert);
 

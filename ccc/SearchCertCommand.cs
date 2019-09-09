@@ -25,8 +25,8 @@ namespace ccc
         public async Task<int> ExecuteAsync()
         {
             HttpClient client = new HttpClient();
-            var userName = await client.GetStringAsync($"{Program.Config.BaseUrl}cert/Thumbprint/{Thumbprint.ToUpperInvariant()}");
-            
+            var userName = await client.GetStringAsync(new Uri($"{Program.Config.BaseUrl}cert/Thumbprint/{Thumbprint.ToUpperInvariant()}")).ConfigureAwait(true);
+            client.Dispose();            
             if (userName!=null)
             {
                 Output.WriteInfo($"The certificate with thumbprint {Thumbprint.ToUpperInvariant()} is registered with user https://github.com/{userName}");

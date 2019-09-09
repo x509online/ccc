@@ -11,20 +11,22 @@ namespace ccc
         {
             bool trusted = true;
             IList<string> reasons = new List<string>();
-            X509Chain chain = new X509Chain(true);
-            chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
-            //chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllowUnknownCertificateAuthority;
-            if (!chain.Build(cert))
+            using (X509Chain chain = new X509Chain(true))
             {
-                trusted = false;
-                foreach (var st in chain.ChainStatus)
+                chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
+                //chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllowUnknownCertificateAuthority;
+                if (!chain.Build(cert))
                 {
-                    reasons.Add(st.StatusInformation);
-                    reasons.Add(st.Status.ToString());
-                    //if (st.Status==X509ChainStatusFlags.UntrustedRoot)
-                    //{
-                    //    trusted = true;
-                    //}
+                    trusted = false;
+                    foreach (var st in chain.ChainStatus)
+                    {
+                        reasons.Add(st.StatusInformation);
+                        reasons.Add(st.Status.ToString());
+                        //if (st.Status==X509ChainStatusFlags.UntrustedRoot)
+                        //{
+                        //    trusted = true;
+                        //}
+                    }
                 }
             }
 

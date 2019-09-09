@@ -24,17 +24,18 @@ namespace ccc
 
         public async Task<int> ExecuteAsync()
         {
-            HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Add("ApiKey", $"{Name}#{ApiKey}");
-            var res = await client.GetStringAsync($"{Program.Config.BaseUrl}cert/login");
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Add("ApiKey", $"{Name}#{ApiKey}");
+                var res = await client.GetStringAsync(new Uri($"{Program.Config.BaseUrl}cert/login")).ConfigureAwait(true);
 
-            Output.WriteSuccess("User Logged in successfully !!");
-            Output.WriteInfo("Saving credentials");
+                Output.WriteSuccess("User Logged in successfully !!");
+                Output.WriteInfo("Saving credentials");
 
-            SaveCredentials();
+                SaveCredentials();
 
-            Output.WriteSuccess("Credentials Saved Successfully.");
-
+                Output.WriteSuccess("Credentials Saved Successfully.");
+            }
             return ReturnCode.Success;
         }
 

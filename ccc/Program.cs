@@ -28,7 +28,7 @@ namespace ccc
         {
             Config = Config.Init();
             PrintWelComeMessage();
-            await CommandLineParser.Default.ParseAndExecuteCommandAsync(args);
+            await CommandLineParser.Default.ParseAndExecuteCommandAsync(args).ConfigureAwait(true);
         }
 
         private static void PrintWelComeMessage()

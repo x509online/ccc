@@ -31,7 +31,7 @@ namespace ccc
             }
             else
             {
-                var cert = await CertRestClient.DownloadCertAndCache(Name, Thumbprint);
+                var cert = await CertRestClient.DownloadCertAndCache(Name, Thumbprint).ConfigureAwait(true);
                 Output.WriteInfo($"Adding Certificate {cert.SubjectName.Name} [{cert.Thumbprint}]");
                 CertTrustValidator.AddCertToStoreIfNotExist(cert);
 

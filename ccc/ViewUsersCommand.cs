@@ -22,25 +22,26 @@ namespace ccc
 
         public async Task<int> ExecuteAsync()
         {
-            HttpClient client = new HttpClient();
-            var res = await client.GetStringAsync($"{Program.Config.BaseUrl}cert/GetUsers");
-
-            List<string> users = JsonConvert.DeserializeObject<List<string>>(res);
-
-            if (users.Count>0)
+            using (HttpClient client = new HttpClient())
             {
-                Output.WriteSuccess($"\nFound {users.Count} users");
-            }
-            else
-            {
-                Output.WriteWarning("\nNo users registered (this should be an error");
-            }
+                var res = await client.GetStringAsync(new Uri($"{Program.Config.BaseUrl}cert/GetUsers")).ConfigureAwait(true);
 
-            foreach (var u in users)
-            {
-                Output.WriteInfo(u);
-            }
+                List<string> users = JsonConvert.DeserializeObject<List<string>>(res);
 
+                if (users.Count > 0)
+                {
+                    Output.WriteSuccess($"\nFound {users.Count} users");
+                }
+                else
+                {
+                    Output.WriteWarning("\nNo users registered (this should be an error");
+                }
+
+                foreach (var u in users)
+                {
+                    Output.WriteInfo(u);
+                }
+            }
             return ReturnCode.Success;
         }
 

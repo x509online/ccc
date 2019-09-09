@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
@@ -29,7 +30,7 @@ namespace ccc
             Output.WriteInfo(Program.Config.BaseUrl);
             Output.WriteInfo(Thumbprint);
 
-            X509Certificate2 cert = await ParseCert();
+            X509Certificate2 cert = await ParseCert().ConfigureAwait(true);
 
             Output.WriteInfo(cert.SubjectName.Name);
 
@@ -70,7 +71,7 @@ namespace ccc
         {
             Console.WriteLine("Add cert to Root? [Y/n]");
             var add = Console.ReadLine();
-            if (add.ToUpper() == "Y")
+            if (add.ToUpper(CultureInfo.InvariantCulture) == "Y")
             {
                 X509Store store = new X509Store(StoreName.Root, StoreLocation.CurrentUser);
                 store.Open(OpenFlags.ReadOnly);

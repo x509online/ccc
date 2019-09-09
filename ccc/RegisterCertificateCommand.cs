@@ -42,30 +42,32 @@ namespace ccc
             }
 
             Output.WriteInfo("Select a Certificate from CurrentUser/My for publishing to CertCentral");
-            X509Certificate2 cert = LoadCertFromCUMy();
-            var http = new HttpClient();
-
-            http.DefaultRequestHeaders.Add("ApiKey", $"{Program.Config.UserName}#{Program.Config.ApiKey}");
-            var data = await http.GetStringAsync(Program.Config.BaseUrl + "cert/rnd");
-            //Output.WriteInfo(data);
-
-            var signature = Sign(data, cert);
-
-            string fullUrl = $"{Program.Config.BaseUrl}cert/verify?data={data}&signature={WebUtility.UrlEncode(signature)}";
-
-            var res = await http.GetAsync(fullUrl);
-
-            if (res.IsSuccessStatusCode)
+            using (X509Certificate2 cert = LoadCertFromCUMy())
             {
-                Output.WriteSuccess("Certificate Registered:" + cert.SubjectName.Name);
-                Output.WriteSuccess($"Availiable at: \n{Program.Config.BaseUrl}cert/getusercert?username={Program.Config.UserName}&thumbprint={cert.Thumbprint.ToUpperInvariant()}");
+                var http = new HttpClient();
+                http.DefaultRequestHeaders.Add("ApiKey", $"{Program.Config.UserName}#{Program.Config.ApiKey}");
+                var data = await http.GetStringAsync(new Uri(Program.Config.BaseUrl + "cert/rnd")).ConfigureAwait(true);
+                http.Dispose();
+                //Output.WriteInfo(data);
 
-                return ReturnCode.Success;
-            }
-            else
-            {
-                Output.WriteError("Cannot register certificate: " + res.ReasonPhrase);
-                return ReturnCode.Failure;
+                var signature = Sign(data, cert);
+
+                string fullUrl = $"{Program.Config.BaseUrl}cert/verify?data={data}&signature={WebUtility.UrlEncode(signature)}";
+
+                var res = await http.GetAsync(new Uri(fullUrl)).ConfigureAwait(true);
+
+                if (res.IsSuccessStatusCode)
+                {
+                    Output.WriteSuccess("Certificate Registered:" + cert.SubjectName.Name);
+                    Output.WriteSuccess($"Availiable at: \n{Program.Config.BaseUrl}cert/getusercert?username={Program.Config.UserName}&thumbprint={cert.Thumbprint.ToUpperInvariant()}");
+
+                    return ReturnCode.Success;
+                }
+                else
+                {
+                    Output.WriteError("Cannot register certificate: " + res.ReasonPhrase);
+                    return ReturnCode.Failure;
+                }
             }
         }
 
@@ -73,27 +75,29 @@ namespace ccc
         {
             if (string.IsNullOrEmpty(certFile) && string.IsNullOrEmpty(certPwd))
             {
-                #if NET47
+#if NET47
                 var cert = CertPicker.X509CertPicker.ShowCertPicker(certSubject);
                 return cert;
-                #else //Console Cert Picker
-                X509Store store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
-                store.Open(OpenFlags.ReadOnly);
-                var codecerts = store.Certificates.Find(X509FindType.FindByApplicationPolicy, "1.3.6.1.5.5.7.3.3", false);
-                var certs = codecerts.Find(X509FindType.FindBySubjectName, certSubject, false);
-                for (int i = 0; i < certs.Count; i++)
+#else //Console Cert Picker
+                using (X509Store store = new X509Store(StoreName.My, StoreLocation.CurrentUser))
                 {
-                    var c = certs[i];
-                    Output.WriteInfo($"{i+1}. {c.SubjectName.Name} [{c.Thumbprint}]");
-                }
-                if (int.TryParse(Console.ReadLine(), out int selectedId))
-                {
-                    var c = certs[selectedId-1];
-                    return c;
-                }
-                else
-                {
-                    throw new ArgumentException("No cert selected");
+                    store.Open(OpenFlags.ReadOnly);
+                    var codecerts = store.Certificates.Find(X509FindType.FindByApplicationPolicy, "1.3.6.1.5.5.7.3.3", false);
+                    var certs = codecerts.Find(X509FindType.FindBySubjectName, certSubject, false);
+                    for (int i = 0; i < certs.Count; i++)
+                    {
+                        var c = certs[i];
+                        Output.WriteInfo($"{i + 1}. {c.SubjectName.Name} [{c.Thumbprint}]");
+                    }
+                    if (int.TryParse(Console.ReadLine(), out int selectedId))
+                    {
+                        var c = certs[selectedId - 1];
+                        return c;
+                    }
+                    else
+                    {
+                        throw new ArgumentException("No cert selected");
+                    }
                 }
                 #endif
             }
