@@ -19,7 +19,7 @@ namespace ccc
 
     class Program
     {
-        internal const string DEFAULT_BASE_URL  = "https://certcentral.x509.online/api/";
+        internal const string DEFAULT_BASE_URL  = "https://x509online.azurewebsites.net/api/";
         //internal const string DEFAULT_BASE_URL = "https://localhost:44305/api/";
 
         public static Config Config { get; set; }
