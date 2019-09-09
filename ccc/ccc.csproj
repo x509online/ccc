@@ -17,13 +17,15 @@
     <Version>0.0.2</Version>
     <Authors>rido</Authors>
     <Product>CertCentralClient</Product>
-    <Description>Command Line Utility for certcentral.x509.online</Description>
+    <Description>Command Line Utility for https://x509online.azurewebsites.net</Description>
     <PackageId>dotnet-ccc</PackageId>
     <RepositoryUrl>https://github.com/x509online/ccc</RepositoryUrl>
     <PackageIconUrl>https://avatars1.githubusercontent.com/u/47493741</PackageIconUrl>
     <PackageTags>x509, certificates, self-signed</PackageTags>
     <Copyright>copyleft</Copyright>
-    <PackageProjectUrl>https://certcentral.x509.online</PackageProjectUrl>
+    <PackageProjectUrl>https://x509online.azurewebsites.net</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
  <ItemGroup Condition="'$(TargetFramework)' == ''">    
