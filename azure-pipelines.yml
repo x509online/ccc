@@ -26,7 +26,6 @@ steps:
     displayName: pack
     inputs:
       command: pack
-      versioningScheme: byBuildNumber
 
   - task: DotNetCoreCLI@2
     displayName: Push
