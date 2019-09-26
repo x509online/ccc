@@ -14,7 +14,7 @@ steps:
     displayName: Restore
     inputs:
       command: restore
-      projects: './ccc/csproj'
+      projects: './ccc/ccc.csproj'
 
   - task: richardfennellBM.BM-VSTS-Versioning-Task.Version-DotNetCoreAssemblies-Task.VersionDotNetCoreAssemblies@2
     displayName: 'Version .NET Core Assemblies'
@@ -24,7 +24,7 @@ steps:
   - task: DotNetCoreCLI@2
     displayName: Build
     inputs:
-      projects: './ccc.csproj'
+      projects: './ccc/ccc.csproj'
       arguments: '--configuration $(BuildConfiguration)'
 
   - task: DotNetCoreCLI@2
