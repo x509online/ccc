@@ -2,19 +2,19 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>    
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <!-- https://github.com/dotnet/sdk/issues/1846#issuecomment-356726385 -->
     <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);PackPublishOutput</TargetsForTfmSpecificContentInPackage>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 
-    <PackAsTool Condition="'$(TargetFramework)'=='netcoreapp2.2'">true</PackAsTool>
+    <PackAsTool Condition="'$(TargetFramework)'=='netcoreapp3.0'">true</PackAsTool>
     <PackageType>DotNetCliTool</PackageType>
     
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   
   <PropertyGroup>  
-    <Version>0.0.2</Version>
+    <Version>0.0.3</Version>
     <Authors>rido</Authors>
     <Product>CertCentralClient</Product>
     <Description>Command Line Utility for https://x509online.azurewebsites.net</Description>
