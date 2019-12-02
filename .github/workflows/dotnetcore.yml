@@ -5,7 +5,7 @@ on: [push]
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v1
@@ -17,6 +17,7 @@ jobs:
       run: dotnet build --configuration Release
     - name: Pack NuGet
       run: dotnet pack --configuration Release
-    - name: Push NuGet
+    - name: Add NuGet Source
       run: nuget sources Add -Name "GPR" -Source "https://nuget.pkg.github.com/x509online/index.json" -UserName ridomin -Password ${{ secrets.GITHUB_TOKEN }}
-      run: nuget push **/Release/*.nupkg -Source GPR
+    - name: "Push NuGet"  
+      run: nuget push **/Release/*.nupkg -Source "GPR"
