@@ -18,6 +18,9 @@ jobs:
     - name: Pack NuGet
       run: dotnet pack --configuration Release
     - name: Add NuGet Source
-      run: nuget sources Add -Name "GPR" -Source "https://nuget.pkg.github.com/x509online/index.json" -UserName ridomin -Password ${{ secrets.GITHUB_TOKEN }}
-    - name: "Push NuGet"  
-      run: nuget push **/Release/*.nupkg -Source "GPR"
+      uses: nuget/setup-nuget@v1
+      with:
+        nuget-api-key: ${{ secrets.NuGetAPIKey }}
+        nuget-version: 'latest'
+    - run: nuget sources Add -Name "GPR" -Source "https://nuget.pkg.github.com/x509online/index.json" -UserName ridomin -Password ${{ secrets.GITHUB_TOKEN }}
+    - run: nuget push **/Release/*.nupkg -Source "GPR"
