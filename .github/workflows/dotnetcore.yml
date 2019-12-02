@@ -17,3 +17,6 @@ jobs:
       run: dotnet build --configuration Release
     - name: Pack NuGet
       run: dotnet pack --configuration Release
+    - name: Push NuGet
+      run: nuget sources Add -Name "GPR" -Source "https://nuget.pkg.github.com/x509online/index.json" -UserName ridomin -Password ${{ secrets.GITHUB_TOKEN }}
+      run: nuget push **/Release/*.nupkg -Source GPR
